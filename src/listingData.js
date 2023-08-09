@@ -15,6 +15,16 @@ const PRODUCTS = [
     {category: "Vegetables", price: "$1", stocked: true, name: "Peas"}
   ];
 
+  /**
+   * The flow of the components are as follows:
+   *    ProduceManager
+   *        FilterableProductTable
+   *            Search Bar
+   *            ProductTable
+   *                ProductCategoryRow
+   *                ProductElementRow
+   * 
+   */
 
 /**
  * This is the category of the products, e.g. "Fruit"
@@ -181,7 +191,8 @@ function FilterableProductTable({productManifest}){
 
 
 //"export default"  makes this the main component in the file.
-//returns a component that contains the filter table
+//returns a component that contains the filter table with a little
+//header above
 export default function ProduceManager() {
 
     return (
