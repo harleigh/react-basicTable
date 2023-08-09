@@ -3,7 +3,7 @@
 //yet being paved; as I am learning, all code and documentation are "as is"
 
 
-//import { useState } from 'react';
+import { useState } from 'react';
 
 const PRODUCTS = [
     {category: "Fruits", price: "$1", stocked: true, name: "Apple"},
@@ -51,12 +51,15 @@ function ProductElementRow({product}) {
     )
 }
 
-function ProductTable({productManifest}) {
+function ProductTable({productManifest, filter, showOnlyInStock}) {
     const tableRows = []
     let prevCategory = null
     console.log(productManifest)
 
     productManifest.forEach( (entry) => {
+        if (showOnlyInStock && !entry.stocked) {
+            return;
+          }
         if(entry.category !== prevCategory){
             tableRows.push( <ProductCategoryRow product={entry}
                                                 key={entry.category}>
@@ -82,14 +85,51 @@ function ProductTable({productManifest}) {
 }
 
 
+function SearchBar({filter, showOnlyInStock, onFilterChange, onShowOnlyInStockChange}){
+    return(
+        <form>
+            <input  type="search"
+                    value={filter}
+                    placeholder="Search..."
+                    onChange={(e) => onFilterChange(e.target.value)}/>
+            <label>
+                <input  type="checkbox" 
+                        checked={showOnlyInStock} 
+                        onChange={(e) => onShowOnlyInStockChange(e.target.checked)} />
+                {' '}
+                Only show products in stock
+            </label>
+        </form>
+    )
+}
+
+
+function FilterableProductTable({productManifest}){
+    const [filterText, setFilterText] = useState('');
+    const [inStockOnly, setInStockOnly] = useState(false);
+    return (
+        <div>
+            <SearchBar filter={filterText}
+                       showOnlyInStock={inStockOnly}
+                       onFilterChange={setFilterText}
+                       onShowOnlyInStockChange={setInStockOnly}/>
+
+            <ProductTable productManifest={PRODUCTS}
+                          filter={filterText}
+                          showOnlyInStock={inStockOnly}/>
+        </div>
+    );
+}
+
+
 //"export default"  makes this the main component in the file.
 //returns a component
 export default function ProduceManager() {
 
     return (
         <>
-            <h1>Hello App!</h1>
-            <ProductTable productManifest={PRODUCTS}/>
+        <h1>Herbert's Produce</h1>
+           <FilterableProductTable productManifest={PRODUCTS}/>
         </>
     );
 
